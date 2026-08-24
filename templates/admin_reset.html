@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Reset Password{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white text-center">
+                <h4>🛠️ Panneau Admin - Réinitialisation</h4>
+            </div>
+            <div class="card-body p-4">
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                {% if success %}
+                <div class="alert alert-success">{{ success }}</div>
+                {% endif %}
+
+                <form method="POST" action="/admin/reset-password">
+                    <div class="mb-3">
+                        <label class="form-label">Clé Secrète Admin</label>
+                        <input type="password" name="secret_key" class="form-control" required placeholder="admin2026">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur du stagiaire</label>
+                        <input type="text" name="username" class="form-control" required placeholder="Ex: yassine">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nouveau mot de passe</label>
+                        <input type="password" name="new_password" class="form-control" required placeholder="Nouveau mot de passe">
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">🔒 Réinitialiser le mot de passe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ module["name"] }}{% endblock %}
+
+{% block content %}
+<a href="/" class="btn btn-secondary mb-4">← Retour au Dashboard</a>
+
+<h1>{{ module["icon"] }} {{ module["name"] }}</h1>
+<p class="text-muted">Type : {{ module["type"] }}</p>
+<hr>
+
+<!-- Section 1: Notes -->
+<h3>📝 Mes Notes</h3>
+
+<form method="POST" action="/module/{{ module['id'] }}/add-note" class="mb-4">
+    <div class="mb-3">
+        <textarea name="content" class="form-control" rows="3" placeholder="Écris une note pour ce module..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">➕ Ajouter la note</button>
+</form>
+
+{% if notes %}
+<div class="list-group mb-5">
+    {% for note in notes %}
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <p class="mb-1">{{ note["content"] }}</p>
+
+            {% if note["status"] == "Important" %}
+            <span class="badge bg-danger">Important</span>
+            {% elif note["status"] == "A réviser" %}
+            <span class="badge bg-warning text-dark">A réviser</span>
+            {% else %}
+            <span class="badge bg-success">Compris</span>
+            {% endif %}
+
+            <small class="text-muted ms-2">{{ note["created_at"] }}</small>
+        </div>
+        
+        <form method="POST" action="/note/delete/{{ note['id'] }}" onsubmit="return confirm('Supprimer cette note ?');">
+            <button type="submit" class="btn btn-outline-danger btn-sm">🗑️</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted mb-5">Aucune note enregistrée pour ce module.</p>
+{% endif %}
+
+<hr>
+
+<!-- Section 2: Résumés PDF -->
+<h3>📚 Résumés PDF</h3>
+
+<!-- تحط هنا: فورم الرفع كيبان غير للأدمن فقط -->
+{% if g.user and g.user['role'] == 'admin' %}
+<form method="POST" action="/module/{{ module['id'] }}/upload-resume" enctype="multipart/form-data" class="mb-4">
+    <div class="row">
+        <div class="col-md-5 mb-2">
+            <input type="text" name="title" class="form-control" placeholder="Titre du résumé (Ex: Chapitre 1)" required>
+        </div>
+        <div class="col-md-5 mb-2">
+            <input type="file" name="file" class="form-control" accept=".pdf" required>
+        </div>
+        <div class="col-md-2 mb-2">
+            <button type="submit" class="btn btn-success w-100">📤 Upload (Admin)</button>
+        </div>
+    </div>
+</form>
+{% endif %}
+
+{% if resumes %}
+<div class="row">
+    {% for resume in resumes %}
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title mb-1">📄 {{ resume["title"] }}</h5>
+                    <small class="text-muted">{{ resume["created_at"] }}</small>
+                </div>
+                <div>
+                    <a href="/uploads/{{ resume['filename'] }}" target="_blank" class="btn btn-outline-primary btn-sm me-1">👁️</a>
+                    {% if g.user and g.user['role'] == 'admin' %}
+                    <form method="POST" action="/resume/delete/{{ resume['id'] }}" class="d-inline" onsubmit="return confirm('Supprimer ce PDF ?');">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">🗑️</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">Aucun résumé PDF ajouté pour ce module.</p>
+{% endif %}
+
+{% endblock %}

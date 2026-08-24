@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ module["name"] }} - EFM{% endblock %}
+
+{% block content %}
+<a href="/efm" class="btn btn-secondary mb-4">← Retour au Center EFM</a>
+
+<h1>{{ module["icon"] }} {{ module["name"] }}</h1>
+<p class="text-muted">Anciens sujets & corrections</p>
+<hr>
+
+<!-- Upload Form (Admin Uniquement) -->
+{% if g.user and g.user['role'] == 'admin' %}
+<div class="card shadow-sm mb-4 border-danger">
+    <div class="card-body">
+        <h4 class="text-danger">➕ Ajouter un EFM / Correction (Admin)</h4>
+        <form method="POST" action="/efm/{{ module['id'] }}/upload" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Titre</label>
+                    <input type="text" name="title" class="form-control" placeholder="Ex: EFM Régional 2025" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Année</label>
+                    <input type="number" name="year" class="form-control" value="2026" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Type</label>
+                    <select name="file_type" class="form-select">
+                        <option value="efm">📄 Sujet EFM</option>
+                        <option value="correction">✅ Correction</option>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Fichier PDF</label>
+                    <input type="file" name="file" class="form-control" accept=".pdf" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-danger w-100">📤 Enregistrer EFM</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Liste des EFM -->
+<h3>📄 Documents disponibles</h3>
+{% if files %}
+<div class="row">
+    {% for file in files %}
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">
+                        {% if file["file_type"] == "correction" %}✅{% else %}📄{% endif %} 
+                        {{ file["title"] }} ({{ file["year"] }})
+                    </h5>
+                    <small class="text-muted">{{ file["created_at"] }}</small>
+                </div>
+                <div>
+                    <a href="/uploads/{{ file['filename'] }}" target="_blank" class="btn btn-outline-danger btn-sm me-1">👁️ Voir</a>
+                    {% if g.user and g.user['role'] == 'admin' %}
+                    <form method="POST" action="/efm/file/delete/{{ file['id'] }}" class="d-inline" onsubmit="return confirm('Supprimer ce document EFM ?');">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">🗑️</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">Aucun EFM ajouté pour ce module.</div>
+{% endif %}
+{% endblock %}

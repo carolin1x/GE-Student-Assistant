@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}EFM Center{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1>🎯 EFM Center</h1>
+    <p class="text-muted">Préparation aux Épreuves de Fin de Module</p>
+</div>
+
+<div class="row">
+    {% for module in modules %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-danger h-100">
+            <div class="card-body">
+                <div class="fs-1">{{ module["icon"] }}</div>
+                <h4 class="card-title text-danger mt-2">{{ module["name"] }}</h4>
+                <p class="card-text text-muted">Accède aux anciens EFM et corrections.</p>
+                <a href="/efm/{{ module['id'] }}" class="btn btn-danger">Préparer l'EFM</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

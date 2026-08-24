@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}
+Résumés - {{ module["name"] }}
+{% endblock %}
+
+{% block content %}
+
+<a
+    href="/module/{{ module['id'] }}"
+    class="btn btn-secondary mb-4"
+>
+    ← Retour au module
+</a>
+
+<div class="mb-4">
+
+    <h1>
+        {{ module["icon"] }} {{ module["name"] }}
+    </h1>
+
+    <p class="text-muted">
+        📚 Résumés du cours
+    </p>
+
+</div>
+
+
+<!-- Upload -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h4 class="mb-3">
+            📄 Ajouter un résumé
+        </h4>
+
+        <form
+            method="POST"
+            action="/module/{{ module['id'] }}/resumes/upload"
+            enctype="multipart/form-data"
+        >
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Titre du résumé
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    class="form-control"
+                    placeholder="Ex: Résumé Chapitre 1"
+                    required
+                >
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Fichier PDF
+                </label>
+
+                <input
+                    type="file"
+                    name="file"
+                    class="form-control"
+                    accept=".pdf"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                📤 Ajouter le PDF
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Résumés -->
+
+<h3 class="mb-3">
+    📚 Mes résumés
+</h3>
+
+
+{% if resumes %}
+
+    <div class="row">
+
+        {% for resume in resumes %}
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        📄 {{ resume["title"] }}
+                    </h5>
+
+                    <p class="text-muted small">
+                        {{ resume["filename"] }}
+                    </p>
+
+                    <a
+                        href="/uploads/{{ resume['filename'] }}"
+                        target="_blank"
+                        class="btn btn-success"
+                    >
+                        👁️ Ouvrir le PDF
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="alert alert-info">
+
+        Aucun résumé ajouté pour le moment.
+
+    </div>
+
+{% endif %}
+
+{% endblock %}
