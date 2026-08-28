@@ -1,10 +1,18 @@
 import os
 import sqlite3
-from flask import Flask, redirect, render_template, request, send_from_directory
-from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect, url_for, session, g
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    g,
+    jsonify,
+    send_from_directory,
+)
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.secret_key = "ge_assistant_secret_key_2026"
 
@@ -377,13 +385,18 @@ def login():
         password = request.form.get("password", "").strip()
 
         conn = get_db()
-        # البحث بالإيميل بـ الحروف الصغيرة لتفادي أي أخطاء
         user = conn.execute(
             "SELECT * FROM users WHERE LOWER(email) = ?", (email,)
         ).fetchone()
         conn.close()
 
         if user and check_password_hash(user["password"], password):
+            # 🛑 التحقق مما إذا كان الحساب معطلاً (Inactif)
+            if user["status"] == "Inactif":
+                return render_template(
+                    "login.html", error="Votre compte est désactivé. Veuillez contacter l'administrateur."
+                )
+
             session.clear()
             session["user_id"] = user["id"]
             session["username"] = user["username"]
@@ -441,6 +454,59 @@ def admin_reset_password():
                 )
 
     return render_template("admin_reset.html")
+
+@app.route('/admin')
+def admin_panel():
+    if not g.user or g.user['role'] != 'admin':
+        return redirect('/')
+
+    conn = get_db()
+    users = conn.execute("SELECT id, username, email, role, status FROM users").fetchall()
+    conn.close()
+
+    system_info = {
+        'python_version': '3.12',
+        'status': 'Opérationnel',
+        'server_time': '2026-08-28'
+    }
+    
+    return render_template('admin.html', users=users, system_info=system_info)
+
+
+# 1️⃣ تفعيل / تعطيل الحساب
+@app.route('/admin/toggle-user/<int:user_id>', methods=['POST'])
+def toggle_user(user_id):
+    if not g.user or g.user['role'] != 'admin':
+        return redirect('/')
+
+    conn = get_db()
+    user = conn.execute("SELECT status FROM users WHERE id = ?", (user_id,)).fetchone()
+    
+    if user:
+        # تبديل الحالة بين Actif و Inactif
+        new_status = 'Inactif' if user['status'] == 'Actif' else 'Actif'
+        conn.execute("UPDATE users SET status = ? WHERE id = ?", (new_status, user_id))
+        conn.commit()
+    
+    conn.close()
+    return redirect('/admin')
+
+
+# 2️⃣ إعادة تعيين كلمة السر لـ 123456
+@app.route('/admin/reset-access/<int:user_id>', methods=['POST'])
+def reset_access(user_id):
+    if not g.user or g.user['role'] != 'admin':
+        return redirect('/')
+
+    # كلمة السر الافتراضية الجديدة هي: 123456
+    default_password = generate_password_hash("123456")
+    
+    conn = get_db()
+    conn.execute("UPDATE users SET password = ? WHERE id = ?", (default_password, user_id))
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin')
 
 
 if __name__ == "__main__":
