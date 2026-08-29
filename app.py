@@ -54,12 +54,16 @@ def index():
         "SELECT * FROM modules WHERE type = 'EFM'"
     ).fetchall()
 
+    # Notes تبقى خاصة بكل مستخدم بوحدو
     total_notes = conn.execute(
         "SELECT COUNT(*) FROM notes WHERE user_id = ?", (g.user["id"],)
     ).fetchone()[0]
+
+    # 🌐 Résumés تولي تحسب كاع الملفات المرفوعة فـ المنصة باش تبان للطلاب كاملين
     total_resumes = conn.execute(
-        "SELECT COUNT(*) FROM resumes WHERE user_id = ?", (g.user["id"],)
+        "SELECT COUNT(*) FROM resumes"
     ).fetchone()[0]
+
     total_efm_files = conn.execute(
         "SELECT COUNT(*) FROM efm_files"
     ).fetchone()[0]
@@ -85,13 +89,17 @@ def module_detail(id):
     module = conn.execute(
         "SELECT * FROM modules WHERE id = ?", (id,)
     ).fetchone()
+
+    # Mots الشخصية كتبقى حصرية للمستخدم اللي كتبها
     notes = conn.execute(
         "SELECT * FROM notes WHERE module_id = ? AND user_id = ? ORDER BY created_at DESC",
-        (id, CURRENT_USER_ID),
+        (id, g.user["id"]),
     ).fetchall()
+
+    # 🌐 Résumés (PDFs) كيبانو لجميع الطلاب كدروس ملخصة
     resumes = conn.execute(
-        "SELECT * FROM resumes WHERE module_id = ? AND user_id = ? ORDER BY created_at DESC",
-        (id, CURRENT_USER_ID),
+        "SELECT * FROM resumes WHERE module_id = ? ORDER BY created_at DESC",
+        (id,),
     ).fetchall()
 
     conn.close()
@@ -507,6 +515,62 @@ def reset_access(user_id):
     conn.close()
 
     return redirect('/admin')
+
+# --- ALL RESUMES PAGE ---
+@app.route("/all-resumes")
+def all_resumes():
+    if not g.user:
+        return redirect("/login")
+    
+    conn = get_db()
+    # جلب جميع الـ PDFs مع اسم الموديول التابع ليها
+    resumes = conn.execute("""
+        SELECT resumes.*, modules.name as module_name 
+        FROM resumes 
+        LEFT JOIN modules ON resumes.module_id = modules.id 
+        ORDER BY resumes.id DESC
+    """).fetchall()
+    conn.close()
+    
+    return render_template("all_resumes.html", resumes=resumes)
+
+
+# --- ALL NOTES PAGE ---
+@app.route("/all-notes")
+def all_notes():
+    if not g.user:
+        return redirect("/login")
+    
+    conn = get_db()
+    # جلب جميع الملاحظات الخاصة بالمستخدم الحالي
+    notes = conn.execute("""
+        SELECT notes.*, modules.name as module_name 
+        FROM notes 
+        LEFT JOIN modules ON notes.module_id = modules.id 
+        WHERE notes.user_id = ? 
+        ORDER BY notes.id DESC
+    """, (g.user["id"],)).fetchall()
+    conn.close()
+    
+    return render_template("all_notes.html", notes=notes)
+
+# --- ALL EFM FILES PAGE ---
+@app.route("/all-efms")
+def all_efms():
+    if not g.user:
+        return redirect("/login")
+    
+    conn = get_db()
+    # جلب جميع ملفات EFM مع اسم الموديول التابع ليها
+    efm_files = conn.execute("""
+        SELECT efm_files.*, modules.name as module_name 
+        FROM efm_files 
+        LEFT JOIN modules ON efm_files.module_id = modules.id 
+        ORDER BY efm_files.id DESC
+    """).fetchall()
+    conn.close()
+    
+    return render_template("all_efms.html", efm_files=efm_files)
 
 
 if __name__ == "__main__":

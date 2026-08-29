@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Tous les Sujets EFM - GE Assistant{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🎯 Tous les Sujets EFM et Corrections</h2>
+    <a href="/" class="btn btn-outline-secondary">🏠 Dashboard</a>
+</div>
+
+{% if efm_files %}
+    <div class="row g-3">
+        {% for efm in efm_files %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100 border-danger">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <span class="badge bg-danger mb-2">
+                            {{ efm['module_name'] if efm['module_name'] else 'EFM General' }}
+                        </span>
+                        <h5 class="card-title fw-bold text-dark">📄 {{ efm['title'] }}</h5>
+                        <p class="card-text text-muted small">
+                            Type: {{ efm['file_type'] if efm['file_type'] else 'Sujet / Correction' }}
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a href="/uploads/{{ efm['filename'] }}" target="_blank" class="btn btn-sm btn-outline-danger w-100">
+                            👁️ Voir / Télécharger EFM
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning text-center py-4">
+        <h4>Aucun sujet EFM disponible pour le moment !</h4>
+        <p class="mb-0">Les sujets et corrections d'EFM ajoutés apparaîtront ici.</p>
+    </div>
+{% endif %}
+{% endblock %}

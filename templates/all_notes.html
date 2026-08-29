@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Toutes mes Notes - GE Assistant{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📝 Toutes mes Notes Personnelles</h2>
+    <a href="/" class="btn btn-outline-secondary">🏠 Dashboard</a>
+</div>
+
+{% if notes %}
+    <div class="row g-3">
+        {% for n in notes %}
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <span class="badge bg-primary">
+                        {{ n['module_name'] if n['module_name'] else 'Général' }}
+                    </span>
+                    <span class="badge bg-secondary">{{ n['status'] }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ n['title'] }}</h5>
+                    <p class="card-text text-muted">{{ n['content'] }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning text-center py-4">
+        <h4>Vous n'avez encore créé aucune note !</h4>
+        <p class="mb-0">Ajoutez des notes dans les modules pour les retrouver facilement ici.</p>
+    </div>
+{% endif %}
+{% endblock %}
