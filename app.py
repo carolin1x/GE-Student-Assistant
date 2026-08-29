@@ -114,15 +114,19 @@ def module_detail(id):
 
 @app.route("/module/<int:id>/add-note", methods=["POST"])
 def add_note(id):
+    if not g.user:
+        return redirect("/login")
+
     content = request.form.get("content", "").strip()
     title = request.form.get("title", "").strip() or "Note"
     status = request.form.get("status", "Compris")
 
     if content:
         conn = get_db()
+        # 🔑 استبدال CURRENT_USER_ID بـ g.user["id"]
         conn.execute(
             "INSERT INTO notes (module_id, title, content, status, user_id) VALUES (?, ?, ?, ?, ?)",
-            (id, title, content, status, CURRENT_USER_ID),
+            (id, title, content, status, g.user["id"]),
         )
         conn.commit()
         conn.close()
@@ -132,6 +136,9 @@ def add_note(id):
 
 @app.route("/module/<int:id>/upload-resume", methods=["POST"])
 def upload_resume(id):
+    if not g.user:
+        return redirect("/login")
+
     if "file" not in request.files:
         return "Aucun fichier", 400
 
@@ -144,9 +151,10 @@ def upload_resume(id):
     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
     conn = get_db()
+    # 🔑 استبدال CURRENT_USER_ID بـ g.user["id"]
     conn.execute(
         "INSERT INTO resumes (module_id, title, filename, user_id) VALUES (?, ?, ?, ?)",
-        (id, title, filename, CURRENT_USER_ID),
+        (id, title, filename, g.user["id"]),
     )
     conn.commit()
     conn.close()
