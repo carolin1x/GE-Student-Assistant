@@ -164,6 +164,7 @@ def upload_resume(id):
 
 # --- EFM CENTER ---
 @app.route("/efm")
+@app.route("/efm-center")  # 👈 ضفت هاد المسار باش يخدم مع الـ Navbar
 def efm_center():
     conn = get_db()
     efm_modules = conn.execute(
@@ -220,6 +221,7 @@ def upload_efm(module_id):
 
 # --- CALCULATRICES ---
 @app.route("/calculators")
+@app.route("/calculatrices")  # 👈 ضفت هاد المسار باش يخدم مع الـ Navbar
 def calculators():
     return render_template("calculators.html")
 

@@ -11,46 +11,238 @@
         {% endblock %}
     </title>
 
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts (Inter + Cairo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Modern Styling -->
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #0f172a;
+            --accent-blue: #2563eb;
+            --accent-orange: #f97316;
+            --border-color: #e2e8f0;
+            --shadow-hover: 0 10px 15px -3px rgba(37, 99, 235, 0.12), 0 4px 6px -4px rgba(37, 99, 235, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', 'Cairo', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+        }
+
+        /* Navbar Exact Buttons Styling */
+        .custom-navbar {
+            background-color: #1e232a !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-btn {
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 7px 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-nav-dashboard {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .btn-nav-dashboard:hover, .btn-nav-dashboard.active {
+            background-color: #ffffff;
+            color: #1e232a;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-nav-efm {
+            background-color: #dc3545;
+            color: #ffffff;
+            border: 1px solid #dc3545;
+        }
+        .btn-nav-efm:hover, .btn-nav-efm.active {
+            background-color: #bb2d3b;
+            color: #ffffff;
+            border-color: #b02a37;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-nav-calc {
+            background-color: #0d6efd;
+            color: #ffffff;
+            border: 1px solid #0d6efd;
+        }
+        .btn-nav-calc:hover, .btn-nav-calc.active {
+            background-color: #0b5ed7;
+            color: #ffffff;
+            border-color: #0a58ca;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .btn-nav-admin {
+            background-color: #ffc107;
+            color: #000000;
+            border: 1px solid #ffc107;
+            font-weight: 700;
+        }
+        .btn-nav-admin:hover, .btn-nav-admin.active {
+            background-color: #e0a800;
+            color: #000000;
+            border-color: #d39e00;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-nav-logout {
+            background-color: transparent;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        .btn-nav-logout:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+        }
+
+        .card-modern {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-modern:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .icon-box-blue {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .icon-box-orange {
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--accent-orange);
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 991.98px) {
+            .navbar-nav-container {
+                padding-top: 1rem;
+                padding-bottom: 0.5rem;
+                gap: 0.65rem !important;
+            }
+            .nav-btn {
+                width: 100%;
+                padding: 9px 14px;
+                font-size: 0.92rem;
+            }
+            .user-badge-mobile {
+                background-color: rgba(255, 255, 255, 0.05);
+                border-radius: 6px;
+                padding: 8px !important;
+                margin: 4px 0;
+            }
+        }
+    </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- Responsive Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <!-- Dynamic Responsive Navbar Block -->
+    {% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">🎓 GE Student Assistant</a>
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/">
+                <i class="fa-solid fa-graduation-cap text-primary fs-4"></i> GE Student Assistant
+            </a>
             
-            <!-- زر المنيو للهاتف (Hamburger Menu Button) -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- محتوى القائمة -->
             <div class="collapse navbar-collapse" id="navbarContent">
-                <div class="ms-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 mt-3 mt-lg-0">
-                    {% if g.user %}
-                        <a href="/" class="btn btn-outline-light btn-sm w-100 w-lg-auto">🏠 Dashboard</a>
-                        <a href="/efm" class="btn btn-danger btn-sm w-100 w-lg-auto">🎯 EFM Center</a>
-                        <a href="/calculators" class="btn btn-primary btn-sm w-100 w-lg-auto">🧮 Calculatrices</a>
+                <div class="ms-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 navbar-nav-container">
+                    {% set current_user = g.user if g and g.user else session.get('user') %}
+                    {% if current_user or session.get('username') %}
+                        {% set username = current_user['username'] if current_user and current_user['username'] else session.get('username', 'Yassine') %}
+                        {% set role = current_user['role'] if current_user and current_user['role'] else session.get('role', '') %}
+
+                        <!-- Dashboard -->
+                        <a href="/" class="nav-btn btn-nav-dashboard {% if request.path == '/' or request.path == '/dashboard' %}active{% endif %}">
+                            <i class="fa-solid fa-house"></i> Dashboard
+                        </a>
+
+                        <!-- EFM Center (Accepts both /efm-center and /efm) -->
+                        <a href="/efm-center" class="nav-btn btn-nav-efm {% if request.path == '/efm-center' or request.path == '/efm' or '/efm/' in request.path %}active{% endif %}">
+                            <i class="fa-solid fa-bullseye"></i> EFM Center
+                        </a>
+
+                        <!-- Calculatrices (Accepts both /calculatrices and /calculators) -->
+                        <a href="/calculatrices" class="nav-btn btn-nav-calc {% if request.path == '/calculatrices' or request.path == '/calculators' or '/calcul' in request.path %}active{% endif %}">
+                            <i class="fa-solid fa-calculator"></i> Calculatrices
+                        </a>
                         
-                        {% if g.user['role'] == 'admin' or g.user['username'] == 'Yassine' %}
-                            <a href="/admin" class="btn btn-warning btn-sm fw-bold text-dark w-100 w-lg-auto">
-                                <i class="fa-solid fa-user-shield me-1"></i> Admin Panel
+                        <!-- Admin Panel -->
+                        {% if role == 'Admin' or role == 'admin' or username == 'Yassine' %}
+                            <a href="/admin" class="nav-btn btn-nav-admin {% if request.path == '/admin' or '/admin' in request.path %}active{% endif %}">
+                                <i class="fa-solid fa-user-shield"></i> Admin Panel
                             </a>
                         {% endif %}
 
-                        <span class="text-white my-1 my-lg-0 text-center text-lg-start">👤 <strong>{{ g.user['username'] }}</strong></span>
-                        <a href="/logout" class="btn btn-outline-danger btn-sm w-100 w-lg-auto">Déconnexion</a>
+                        <!-- User Profile Badge -->
+                        <div class="d-flex align-items-center justify-content-center gap-1 text-white px-2 py-1 user-badge-mobile">
+                            <i class="fa-solid fa-circle-user text-info fs-5"></i>
+                            <strong>{{ username }}</strong>
+                        </div>
+
+                        <!-- Logout -->
+                        <a href="/logout" class="nav-btn btn-nav-logout">
+                            <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+                        </a>
                     {% else %}
-                        <a href="/login" class="btn btn-outline-light btn-sm w-100 w-lg-auto">🔐 Connexion</a>
-                        <a href="/register" class="btn btn-success btn-sm w-100 w-lg-auto">📝 Inscription</a>
+                        <a href="/login" class="btn btn-outline-light btn-sm w-100 w-lg-auto">
+                            <i class="fa-solid fa-lock me-1"></i> Connexion
+                        </a>
+                        <a href="/register" class="btn btn-success btn-sm w-100 w-lg-auto">
+                            <i class="fa-solid fa-user-plus me-1"></i> Inscription
+                        </a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </nav>
+    {% endblock %}
 
     <!-- Content Area -->
     <main class="container py-4 flex-grow-1">
@@ -70,7 +262,7 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS (ضروري جداً باش يخدم زر الهاتف) -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -3,37 +3,65 @@
 {% block title %}Inscription - GE Assistant{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-header bg-success text-white text-center">
-                <h4>📝 Créer un compte</h4>
+<div class="row justify-content-center align-items-center py-4 my-auto">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            
+            <div class="card-header bg-success text-white text-center py-3 border-0">
+                <h4 class="fw-bold mb-0">📝 Créer un compte</h4>
             </div>
-            <div class="card-body p-4">
+
+            <div class="card-body p-4 bg-white">
                 {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 py-2 px-3 mb-3 text-center" role="alert">
+                    <small class="fw-semibold"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ error }}</small>
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 {% endif %}
 
                 <form method="POST" action="/register">
                     <div class="mb-3">
-                        <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" name="username" class="form-control" required placeholder="Ex: yassine">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Nom d'utilisateur</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" name="username" class="form-control border-start-0 ps-0 bg-light" required placeholder="Ex: yassine" autocomplete="username">
+                        </div>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" required placeholder="exemple@gmail.com">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </span>
+                            <input type="email" name="email" class="form-control border-start-0 ps-0 bg-light" required placeholder="exemple@gmail.com" autocomplete="email">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" name="password" class="form-control" required>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Mot de passe</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0">
+                                <i class="fa-solid fa-key"></i>
+                            </span>
+                            <input type="password" name="password" class="form-control border-start-0 ps-0 bg-light" required>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-success w-100">Créer mon compte</button>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm rounded-3">Créer mon compte</button>
                 </form>
-                <hr>
+
+                <hr class="my-4 text-muted opacity-25">
+
                 <div class="text-center">
-                    <p class="mb-0">Déjà un compte ? <a href="/login">Se connecter</a></p>
+                    <p class="mb-0 small text-secondary">
+                        Déjà un compte ? <a href="/login" class="fw-bold text-success text-decoration-none ms-1">Se connecter</a>
+                    </p>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

@@ -3,32 +3,52 @@
 {% block title %}Connexion - GE Assistant{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-                <h4>🔐 Connexion - GE Assistant</h4>
+<div class="row justify-content-center align-items-center py-4 my-auto">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            
+            <div class="card-header bg-primary text-white text-center py-3 border-0">
+                <h4 class="fw-bold mb-0">🔐 Connexion - GE Assistant</h4>
             </div>
-            <div class="card-body p-4">
+
+            <div class="card-body p-4 bg-white">
                 {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 py-2 px-3 mb-3 text-center" role="alert">
+                    <small class="fw-semibold"><i class="fa-solid fa-circle-exclamation me-1"></i> {{ error }}</small>
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 {% endif %}
 
                 <form method="POST" action="/login">
                     <div class="mb-3">
-                        <label class="form-label">Adresse Email</label>
-                        <input type="email" name="email" class="form-control" required placeholder="exemple@gmail.com">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Adresse Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </span>
+                            <input type="email" name="email" class="form-control border-start-0 ps-0 bg-light" required placeholder="exemple@gmail.com" autocomplete="email">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" name="password" class="form-control" required placeholder="••••••••">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small mb-1">Mot de passe</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0">
+                                <i class="fa-solid fa-key"></i>
+                            </span>
+                            <input type="password" name="password" class="form-control border-start-0 ps-0 bg-light" required placeholder="••••••••">
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-3">Se connecter</button>
                 </form>
-                
-                <hr>
+
+                <hr class="my-4 text-muted opacity-25">
+
                 <div class="text-center">
-                    <p class="mb-2">Pas encore de compte ? <a href="/register" class="fw-bold">S'inscrire</a></p>
+                    <p class="mb-2 small text-secondary">
+                        Pas encore de compte ? <a href="/register" class="fw-bold text-primary text-decoration-none ms-1">S'inscrire</a>
+                    </p>
                     <small class="text-muted">
                         Mot de passe oublié ? 
                         <a href="https://wa.me/212675371145?text=Bonjour%20Admin,%20j'ai%20oubli%C3%A9%20mon%20mot%20de%20passe" 
@@ -39,6 +59,7 @@
                     </small>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
